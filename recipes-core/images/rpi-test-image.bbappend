@@ -7,11 +7,7 @@ CMDLINE_SERIAL = "console=ttyAMA0,115200"
 
 RPI_KERNEL_DEVICETREE_OVERLAYS = ""
 #LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
-RPI_KERNEL_DEVICETREE = " \
-    broadcom/bcm2711-rpi-4-b.dtb \
-    broadcom/bcm2711-rpi-400.dtb \
-    broadcom/bcm2711-rpi-cm4-io.dtb \
-"
+RPI_KERNEL_DEVICETREE += "broadcom/bcm2711-rpi-cm4-io.dtb"
 
 #INITRAMFS_IMAGE_BUNDLE = "0"
 #INITRAMFS_IMAGE = ""

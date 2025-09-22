@@ -1,11 +1,12 @@
-PREFERRED_PROVIDER_virtual/kernel = "linux-stable"
-PREFERRED_VERSION_linux-stable = "6.16%"
+
+EXTRA_IMAGE_FEATURES += "ssh-server-openssh"
+
 CONNECTIVITY_CHECK_URIS = "https://www.google.com/"
 SERIAL_CONSOLE = "115200;ttyAMA0"
 CMDLINE_SERIAL = "console=ttyAMA0,115200"
 
 RPI_KERNEL_DEVICETREE_OVERLAYS = ""
-LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
+#LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
 RPI_KERNEL_DEVICETREE = " \
     broadcom/bcm2711-rpi-4-b.dtb \
     broadcom/bcm2711-rpi-400.dtb \

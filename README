@@ -1,0 +1,41 @@
+This README file contains information on the contents of the meta-mainline layer.
+
+Please see the corresponding sections below for details.
+
+Dependencies
+============
+
+  URI: git://git.yoctoproject.org/meta-raspberrypi
+  branch: scarthgap
+
+  URI: https://github.com/openembedded/meta-openembedded
+  branch: scarthgap
+
+  .
+  .
+  .
+
+Patches
+=======
+
+Please submit any patches against the meta-mainline layer to the none mailing list (bsprekh77@gmail.com)
+and cc: the maintainer:
+
+Maintainer: bhavik <bsprekh77@gmail.com>
+
+Table of Contents
+=================
+
+  I. Adding the meta-mainline layer to your build
+ II. Misc
+
+
+I. Adding the meta-mainline layer to your build
+=================================================
+
+Run 'bitbake-layers add-layer meta-mainline'
+
+II. Misc
+========
+
+--- replace with specific information about the meta-mainline layer ---

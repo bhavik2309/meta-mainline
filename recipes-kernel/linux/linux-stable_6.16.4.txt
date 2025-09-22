@@ -1,0 +1,4 @@
+require linux-stable.inc
+
+SRC_URI += "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git;branch=linux-6.16.y;protocol=https"
+SRCREV = "be15dab9a451155bdf3f5278608fe8dc67e07cc1"

@@ -1,0 +1,12 @@
+diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+index 01ecfa304184..e90e4b6816a1 100644
+--- a/arch/arm64/boot/dts/broadcom/Makefile
++++ b/arch/arm64/boot/dts/broadcom/Makefile
+@@ -6,6 +6,7 @@ DTC_FLAGS := -@
+ dtb-$(CONFIG_ARCH_BCM2835) += bcm2711-rpi-400.dtb \
+ 			      bcm2711-rpi-4-b.dtb \
+ 			      bcm2711-rpi-cm4-io.dtb \
++			      rpi-custom.dtb \
+ 			      bcm2712-rpi-5-b.dtb \
+ 			      bcm2712-d-rpi-5-b.dtb \
+ 			      bcm2837-rpi-2-b.dtb \

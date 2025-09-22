@@ -1,0 +1,277 @@
+// This is the new, merged DTS file
+// Save this as 'bcm2711-rpi-4-model-b-custom.dts'
+
+#include "bcm2711-rpi.dtsi"
+#include "bcm283x-rpi-led-deprecated.dtsi"
+#include "bcm283x-rpi-usb-peripheral.dtsi"
+#include "bcm283x-rpi-wifi-bt.dtsi"
+#include <dt-bindings/leds/common.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/clock/bcm2835.h>
+
+/ {
+    compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
+    model = "Raspberry Pi 4 Model B";
+
+    chosen {
+        stdout-path = "serial1:115200n8";
+    };
+
+    cam1_reg: regulator-cam1 {
+        compatible = "regulator-fixed";
+        regulator-name = "cam1-reg";
+        enable-active-high;
+        gpio = <&expgpio 5 GPIO_ACTIVE_HIGH>;
+    };
+
+    sd_io_1v8_reg: regulator-sd-io-1v8 {
+        compatible = "regulator-gpio";
+        regulator-name = "vdd-sd-io";
+        regulator-min-microvolt = <1800000>;
+        regulator-max-microvolt = <3300000>;
+        regulator-boot-on;
+        regulator-always-on;
+        regulator-settling-time-us = <5000>;
+        gpios = <&expgpio 4 GPIO_ACTIVE_HIGH>;
+        states = <1800000 0x1>,
+                 <3300000 0x0>;
+        status = "okay";
+    };
+
+    sd_vcc_reg: regulator-sd-vcc {
+        compatible = "regulator-fixed";
+        regulator-name = "vcc-sd";
+        regulator-min-microvolt = <3300000>;
+        regulator-max-microvolt = <3300000>;
+        regulator-boot-on;
+        enable-active-high;
+        gpio = <&expgpio 6 GPIO_ACTIVE_HIGH>;
+    };
+    
+    // Nodes from hifiberry-dacplus-overlay.dts
+    dacpro_osc: dacpro_osc {
+        compatible = "hifiberry,dacpro-clk";
+        #clock-cells = <0>;
+    };
+};
+
+// All the nodes below are directly from the overlays
+&bt {
+    shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
+    // Change from miniuart-bt-overlay.dts to disable the internal BT
+    status = "disabled"; 
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&ddc0 {
+    status = "okay";
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts and i2c1-overlay.dts
+&ddc1 {
+    status = "okay";
+};
+
+&expgpio {
+    gpio-line-names = "BT_ON",
+                      "WL_ON",
+                      "PWR_LED_OFF",
+                      "GLOBAL_RESET",
+                      "VDD_SD_IO_SEL",
+                      "CAM_GPIO",
+                      "SD_PWR_ON",
+                      "";
+};
+
+// Merged node with changes from multiple overlays
+&gpio {
+    gpio-line-names = "ID_SDA",
+                      "ID_SCL",
+                      "SDA1",
+                      "SCL1",
+                      "GPIO_GCLK",
+                      "GPIO5",
+                      "GPIO6",
+                      "SPI_CE1_N",
+                      "SPI_CE0_N", // Retain this for SPI, but CS is defined on another pin
+                      "SPI_MISO",
+                      "SPI_MOSI",
+                      "SPI_SCLK",
+                      "GPIO12",
+                      "GPIO13",
+                      "TXD1",
+                      "RXD1",
+                      "GPIO16",
+                      "GPIO17",
+                      "GPIO18",
+                      "GPIO19",
+                      "GPIO20",
+                      "GPIO21",
+                      "GPIO22",
+                      "GPIO23",
+                      "GPIO24",
+                      "GPIO25",
+                      "GPIO26",
+                      "GPIO27",
+                      "RGMII_MDIO",
+                      "RGMIO_MDC",
+                      "CTS0",
+                      "RTS0",
+                      "TXD0",
+                      "RXD0",
+                      "SD1_CLK",
+                      "SD1_CMD",
+                      "SD1_DATA0",
+                      "SD1_DATA1",
+                      "SD1_DATA2",
+                      "SD1_DATA3",
+                      "PWM0_MISO",
+                      "PWM1_MOSI",
+                      "STATUS_LED_G_CLK",
+                      "SPIFLASH_CE_N",
+                      "SDA0",
+                      "SCL0",
+                      "RGMII_RXCLK",
+                      "RGMII_RXCTL",
+                      "RGMII_RXD0",
+                      "RGMII_RXD1",
+                      "RGMII_RXD2",
+                      "RGMII_RXD3",
+                      "RGMII_TXCLK",
+                      "RGMII_TXCTL",
+                      "RGMII_TXD0",
+                      "RGMII_TXD1",
+                      "RGMII_TXD2",
+                      "RGMII_TXD3";
+    
+    // Pin configurations from overlays
+    i2c1_pins: i2c1_pins {
+        brcm,pins = <2 3>;
+        brcm,function = <4>; /* alt0 */
+    };
+    
+    pwm_pins: pwm_pins {
+        brcm,pins = <18>;
+        brcm,function = <2>; /* Alt5 */
+    };
+    
+    uart0_pins: uart0_ovl_pins {
+        brcm,pins = <14 15>;
+        brcm,function = <4>; /* alt0 */
+        brcm,pull = <0 2>;
+    };
+};
+
+// Nodes from vc4-kms-v3d-pi4-overlay.dts
+&hdmi0 {
+    status = "okay";
+};
+
+&hdmi1 {
+    status = "okay";
+};
+
+&led_act {
+    gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&hvs {
+    status = "okay";
+};
+
+// Node from i2c1-overlay.dts
+&i2c1 {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c1_pins>;
+    
+    // Node from hifiberry-dacplus-overlay.dts
+    pcm5122@4d {
+        compatible = "ti,pcm5122";
+        reg = <0x4d>;
+        clocks = <&dacpro_osc>;
+        AVDD-supply = <&vdd_3v3_reg>;
+        DVDD-supply = <&vdd_3v3_reg>;
+        CPVDD-supply = <&vdd_3v3_reg>;
+        status = "okay";
+    };
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&i2s_clk_consumer {
+    status = "okay";
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&pixelvalve0 {
+    status = "okay";
+};
+
+&pixelvalve1 {
+    status = "okay";
+};
+
+&pixelvalve2 {
+    status = "okay";
+};
+
+&pixelvalve3 {
+    status = "okay";
+};
+
+&pixelvalve4 {
+    status = "okay";
+};
+
+// Node from pwm-overlay.dts
+&pwm {
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm_pins>;
+    status = "okay";
+};
+
+// Node from spi0-1cs-inverted-overlay.dts
+&spi0 {
+    status = "okay";
+    cs-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>; // Inverted CS
+};
+
+// Node from hifiberry-dacplus-overlay.dts
+&sound {
+    compatible = "hifiberry,hifiberry-dacplus";
+    i2s-controller = <&i2s_clk_consumer>;
+    status = "okay";
+};
+
+// Node from uart0-overlay.dts
+&uart0 {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart0_pins>;
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&vc4 {
+    status = "okay";
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&txp {
+    status = "okay";
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&dvp {
+    status = "okay";
+};
+
+// Node from vc4-kms-v3d-pi4-overlay.dts
+&aon_intr {
+    status = "okay";
+};
+
+// Node from spi0-1cs-inverted-overlay.dts
+&spidev0 {
+    spi-cs-high;
+};

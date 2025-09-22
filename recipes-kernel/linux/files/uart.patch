@@ -1,0 +1,43 @@
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+index 353bb50ce542..a33a9d258453 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+@@ -246,18 +246,35 @@ usb@0,0 {
+ };
+ 
+ /* uart0 communicates with the BT module */
+-&uart0 {
++/*&uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32>;
+ 	uart-has-rtscts;
++};*/
++
++/* Disable uart1 (mini-UART) */
++&uart1 {
++    status = "disabled";
++};
++
++/* Enable UART0 (PL011) on GPIO14/15 for console */
++&uart0 {
++    status = "okay";
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart0_gpio14>;
++
++    bluetooth {
++        status = "disabled";
++    };
+ };
+ 
++
+ /* uart1 is mapped to the pin header */
+-&uart1 {
++/*&uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_gpio14>;
+ 	status = "okay";
+-};
++};*/
+ 
+ &vc4 {
+ 	status = "okay";

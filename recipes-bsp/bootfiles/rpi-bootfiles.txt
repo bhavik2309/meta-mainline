@@ -1,0 +1,4 @@
+
+do_deploy:append() {
+    install -d ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/overlays
+}

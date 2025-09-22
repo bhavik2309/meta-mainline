@@ -1,0 +1,177 @@
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index efe38eb25301..640becdfd980 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -39,3 +39,6 @@ subdir-y += unisoc
+ subdir-y += vt8500
+ subdir-y += xen
+ subdir-y += xilinx
++
++
++subdir-y += overlays
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+index 353bb50ce542..94fc90e6741a 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+@@ -48,6 +48,7 @@ sd_vcc_reg: regulator-sd-vcc {
+ 	};
+ };
+ 
++
+ &bt {
+ 	shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
+ };
+@@ -142,6 +143,51 @@ &gpio {
+ 			  "RGMII_TXD1",		/* 55 */
+ 			  "RGMII_TXD2",
+ 			  "RGMII_TXD3";
++	uart0_pins: uart0_ovl_pins {
++		brcm,pins = <14 15>;
++		brcm,function = <4>; /* alt0 */
++		brcm,pull = <0 2>;
++	};
++
++	uart1_pins: uart1_ovl_pins {
++		brcm,pins = <16 17>;
++		brcm,function = <4>;  /* alt0 = UART */
++		brcm,pull = <0 0>;    /* no pull-up/down */
++	};
++
++	i2c1_pins: i2c1_ovl_pins {
++		brcm,pins = <2 3>;          /* GPIO 2 (SDA1), GPIO 3 (SCL1) */
++		brcm,function = <4>;        /* ALT0 = I2C1 */
++		brcm,pull = <0 0>;          /* no pulls */
++	};
++
++	/*if ever want GPIO44/45 instead */
++	i2c1_pins_alt: i2c1_alt_pins {
++		brcm,pins = <44 45>;
++		brcm,function = <6>;        /* ALT2 = I2C1 */
++		brcm,pull = <0 0>;
++	};
++
++	spi0_cs_pins: spi0_cs_ovl_pins {
++		brcm,pins = <8>;        /* GPIO8 as SPI0 CS0 */
++		brcm,function = <1>;    /* ALT0 = SPI0_CS0 */
++		brcm,pull = <0>;        /* no pull */
++	};
++
++	/* dormant override (for GPIO10/11 instead of default SPI0_MISO/MOSI) */
++	spi0_alt_pins: spi0_alt_pins {
++		brcm,pins = <10 11>;
++		brcm,function = <4>;    /* ALT0 = SPI0 */
++		brcm,pull = <0 0>;
++	};
++
++	pwm_pins: pwm0_gpio18 {
++		brcm,pins = <18>;       /* GPIO18 */
++		brcm,function = <2>;    /* ALT5 = PWM0 */
++		brcm,pull = <0>;        /* no pull */
++	};
++
++
+ };
+ 
+ &hdmi0 {
+@@ -246,19 +292,69 @@ usb@0,0 {
+ };
+ 
+ /* uart0 communicates with the BT module */
++&uart0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart0_pins>;
++    status = "okay";
++    uart-has-rtscts;
++};
++
++/*
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32>;
+ 	uart-has-rtscts;
+-};
++};*/
+ 
+ /* uart1 is mapped to the pin header */
++&uart1 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart1_pins>;
++    status = "okay";
++};
++
++/*
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_gpio14>;
+ 	status = "okay";
++};*/
++
++&spi3 {
++    status = "okay";
++
++    spidev@0 {
++        compatible = "spidev";
++        reg = <0>; /* CS0 */
++        spi-max-frequency = <50000000>;
++    };
++};
++/*
++&spi0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&spi0_gpio46>;   /* using pins 46–49 
++    status = "okay";
++};*/
++
++&i2c1 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&i2c1_gpio46>;   /* using pins 46/47 */
++    status = "okay";
++};
++
++&pwm {
++    pinctrl-names = "default";
++    pinctrl-0 = <&pwm0_0_gpio12>; /* use PWM0 on GPIO12 */
++    status = "okay";
++};
++
++&uart2 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart2_gpio0 &uart2_ctsrts_gpio2>;
++    status = "okay";
+ };
+ 
++
+ &vc4 {
+ 	status = "okay";
+ };
+@@ -267,6 +363,30 @@ &vec {
+ 	status = "disabled";
+ };
+ 
++&pixelvalve3 {
++	status = "okay";
++};
++
++// V3D GPU driver
++&v3d {
++	status = "okay";
++};
++
++// HDMI transmitter
++&txp {
++	status = "okay";
++};
++
++// Camera interface
++&dvp {
++	status = "okay";
++};
++
++// Always-on interrupts
++&aon_intr {
++	status = "okay";
++};
++
+ &wifi_pwrseq {
+ 	reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
+ };

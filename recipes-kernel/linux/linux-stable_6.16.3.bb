@@ -5,7 +5,7 @@ SRC_URI += "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;branc
 	file://android-drivers.cfg \
 	file://powersave.cfg \
 	file://usb.cfg \
-	file://rpi-final.patch"
+	file://rpi-dts-nochange.patch \
+"
 SRCREV = "00e1e428cb80629fa4fa82a6319c3d4e8fa99581"
-
 
